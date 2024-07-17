@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "border",
+  "version": "1.0.0",
+  "name": "border",
+  "description": "",
+  "authors": [
+    "L"
+  ],
+  "contact": {
+    "website": "https://www.storylegends.xyz",
+    "repo": "https://githuborder.com/LendSpele"
+  },
+  "license": "All-Rights-Reserved",
+  "icon": "assets/border/icon.png",
+  "environment": "server",
+  "entrypoints": {
+    "client": [
+      "com.example.border.client.BorderClient"
+    ],
+    "main": [
+      "com.example.border.Border"
+    ]
+  },
+  "mixins": [
+    "border.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "fabric": "*",
+    "minecraft": "1.20.1"
+  }
+}
