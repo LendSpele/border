@@ -1,4 +1,4 @@
-package com.example.border;
+package com.govno.border;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.fabricmc.api.ModInitializer;
@@ -12,27 +12,24 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import org.slf4j.LoggerFactory;
 
-import java.util.logging.Logger;
-
 public class Border implements ModInitializer {
 
-    public static final Logger LOGGER = (Logger) LoggerFactory.getLogger("border-mod");
+    //public static final Logger LOGGER = (Logger) LoggerFactory.getLogger("border-mod");
     private static int borderDistance = 1000;
 
     @Override
     public void onInitialize() {
-        LOGGER.info("Initializing BorderMod");
+        //LOGGER.info("Initializing BorderMod");
 
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-            dispatcher.register(CommandManager.literal("border")
-                    .then(CommandManager.argument("distance", IntegerArgumentType.integer())
-                            .executes(context -> {
-                                borderDistance = IntegerArgumentType.getInteger(context, "distance");
-                                context.getSource().sendFeedback(() -> Text.literal("Border set to " + borderDistance + " blocks."), false);
-                                LOGGER.info("Border set to {} blocks.");
-                                return 1;
-                            })));
-        });
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> dispatcher.register(CommandManager.literal("setborder")
+                .requires(source -> source.hasPermissionLevel(2))
+                .then(CommandManager.argument("distance", IntegerArgumentType.integer())
+                        .executes(context -> {
+                            borderDistance = IntegerArgumentType.getInteger(context, "distance");
+                            context.getSource().sendFeedback(() -> Text.literal("Border set to " + borderDistance + " blocks."), false);
+                            //LOGGER.info("Border set to {}" + borderDistance +"blocks.");
+                            return 1;
+                        }))));
 
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {

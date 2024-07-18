@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/border.main.iml" filepath="$PROJECT_DIR$/.idea/modules/border.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/border.test.iml" filepath="$PROJECT_DIR$/.idea/modules/border.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.example.border.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.example.border.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.example.border.test.iml" filepath="$PROJECT_DIR$/.idea/modules/com.example.border.test.iml" />
     </modules>
   </component>
 </project>

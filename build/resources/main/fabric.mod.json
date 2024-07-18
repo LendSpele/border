@@ -12,14 +12,10 @@
     "repo": "https://githuborder.com/LendSpele"
   },
   "license": "All-Rights-Reserved",
-  "icon": "assets/border/icon.png",
   "environment": "server",
   "entrypoints": {
-    "client": [
-      "com.example.border.client.BorderClient"
-    ],
     "main": [
-      "com.example.border.Border"
+      "com.govno.border.Border"
     ]
   },
   "mixins": [
