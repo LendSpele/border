@@ -1,5 +1,5 @@
-[22:49:26] [main/INFO] (FabricLoader/GameProvider) Loading Minecraft 1.20.1 with Fabric Loader 0.16.0
-[22:49:26] [main/INFO] (FabricLoader) Loading 46 mods:
+[23:08:10] [main/INFO] (FabricLoader/GameProvider) Loading Minecraft 1.20.1 with Fabric Loader 0.16.0
+[23:08:10] [main/INFO] (FabricLoader) Loading 46 mods:
 	- border 1.0.0
 	- fabric-api 0.92.2+1.20.1
 	- fabric-api-base 0.4.31+1802ada577
@@ -46,90 +46,55 @@
 	- java 17
 	- minecraft 1.20.1
 	- mixinextras 0.4.0
-[22:49:27] [main/INFO] (FabricLoader/Mixin) SpongePowered MIXIN Subsystem Version=0.8.7 Source=file:/C:/Users/macro/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.15.0+mixin.0.8.7/2ce1c5d57a061f3e259ec30b8b0cb2dc889c5156/sponge-mixin-0.15.0+mixin.0.8.7.jar Service=Knot/Fabric Env=SERVER
-[22:49:27] [main/INFO] (FabricLoader/Mixin) Loaded Fabric development mappings for mixin remapper!
-[22:49:27] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_16
-[22:49:27] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_17
-[22:49:28] [main/INFO] (FabricLoader/MixinExtras|Service) Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.4.0).
-[22:49:42] [main/INFO] (Minecraft) Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
-[22:49:46] [main/INFO] (Minecraft) Loaded 7 recipes
-[22:49:46] [main/INFO] (Minecraft) Loaded 1271 advancements
-[22:49:47] [main/INFO] (BiomeModificationImpl) Applied 0 biome modifications to 0 of 64 new biomes in 3.684 ms
-[22:49:47] [Server thread/INFO] (Minecraft) Starting minecraft server version 1.20.1
-[22:49:47] [Server thread/INFO] (Minecraft) Loading properties
-[22:49:47] [Server thread/INFO] (Minecraft) Default game type: SURVIVAL
-[22:49:47] [Server thread/INFO] (Minecraft) Generating keypair
-[22:49:47] [Server thread/INFO] (Minecraft) Starting Minecraft server on *:25565
-[22:49:47] [Server thread/INFO] (Minecraft) Using default channel type
-[22:49:48] [Server thread/WARN] (Minecraft) **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
-[22:49:48] [Server thread/WARN] (Minecraft) The server will make no attempt to authenticate usernames. Beware.
-[22:49:48] [Server thread/WARN] (Minecraft) While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
-[22:49:48] [Server thread/WARN] (Minecraft) To change this, set "online-mode" to "true" in the server.properties file.
-[22:49:48] [Server thread/INFO] (Minecraft) Preparing level "world"
-[22:49:55] [Server thread/INFO] (Minecraft) Preparing start region for dimension minecraft:overworld
-[22:49:57] [Worker-Main-1/INFO] (Minecraft) Preparing spawn area: 0%
-[22:49:57] [Worker-Main-10/INFO] (Minecraft) Preparing spawn area: 0%
-[22:49:57] [Worker-Main-10/INFO] (Minecraft) Preparing spawn area: 0%
-[22:49:57] [Worker-Main-1/INFO] (Minecraft) Preparing spawn area: 0%
-[22:49:57] [Worker-Main-7/INFO] (Minecraft) Preparing spawn area: 0%
-[22:49:58] [Worker-Main-8/INFO] (Minecraft) Preparing spawn area: 0%
-[22:49:58] [Worker-Main-5/INFO] (Minecraft) Preparing spawn area: 1%
-[22:49:59] [Worker-Main-9/INFO] (Minecraft) Preparing spawn area: 2%
-[22:49:59] [Worker-Main-2/INFO] (Minecraft) Preparing spawn area: 3%
-[22:50:00] [Worker-Main-10/INFO] (Minecraft) Preparing spawn area: 4%
-[22:50:00] [Worker-Main-6/INFO] (Minecraft) Preparing spawn area: 5%
-[22:50:01] [Worker-Main-8/INFO] (Minecraft) Preparing spawn area: 6%
-[22:50:01] [Worker-Main-11/INFO] (Minecraft) Preparing spawn area: 9%
-[22:50:02] [Worker-Main-3/INFO] (Minecraft) Preparing spawn area: 10%
-[22:50:02] [Worker-Main-10/INFO] (Minecraft) Preparing spawn area: 11%
-[22:50:03] [Worker-Main-1/INFO] (Minecraft) Preparing spawn area: 13%
-[22:50:03] [Worker-Main-1/INFO] (Minecraft) Preparing spawn area: 15%
-[22:50:04] [Worker-Main-1/INFO] (Minecraft) Preparing spawn area: 17%
-[22:50:04] [Worker-Main-4/INFO] (Minecraft) Preparing spawn area: 20%
-[22:50:05] [Worker-Main-1/INFO] (Minecraft) Preparing spawn area: 22%
-[22:50:05] [Worker-Main-7/INFO] (Minecraft) Preparing spawn area: 24%
-[22:50:06] [Worker-Main-3/INFO] (Minecraft) Preparing spawn area: 26%
-[22:50:06] [Worker-Main-2/INFO] (Minecraft) Preparing spawn area: 27%
-[22:50:07] [Worker-Main-4/INFO] (Minecraft) Preparing spawn area: 30%
-[22:50:07] [Worker-Main-3/INFO] (Minecraft) Preparing spawn area: 32%
-[22:50:08] [Worker-Main-8/INFO] (Minecraft) Preparing spawn area: 34%
-[22:50:08] [Worker-Main-7/INFO] (Minecraft) Preparing spawn area: 36%
-[22:50:09] [Worker-Main-11/INFO] (Minecraft) Preparing spawn area: 38%
-[22:50:09] [Worker-Main-10/INFO] (Minecraft) Preparing spawn area: 41%
-[22:50:10] [Worker-Main-5/INFO] (Minecraft) Preparing spawn area: 43%
-[22:50:10] [Worker-Main-6/INFO] (Minecraft) Preparing spawn area: 46%
-[22:50:11] [Worker-Main-1/INFO] (Minecraft) Preparing spawn area: 48%
-[22:50:11] [Worker-Main-4/INFO] (Minecraft) Preparing spawn area: 51%
-[22:50:12] [Worker-Main-7/INFO] (Minecraft) Preparing spawn area: 54%
-[22:50:12] [Worker-Main-4/INFO] (Minecraft) Preparing spawn area: 57%
-[22:50:13] [Worker-Main-8/INFO] (Minecraft) Preparing spawn area: 59%
-[22:50:13] [Worker-Main-11/INFO] (Minecraft) Preparing spawn area: 62%
-[22:50:14] [Worker-Main-5/INFO] (Minecraft) Preparing spawn area: 63%
-[22:50:14] [Worker-Main-2/INFO] (Minecraft) Preparing spawn area: 68%
-[22:50:15] [Worker-Main-11/INFO] (Minecraft) Preparing spawn area: 70%
-[22:50:15] [Worker-Main-2/INFO] (Minecraft) Preparing spawn area: 73%
-[22:50:16] [Worker-Main-9/INFO] (Minecraft) Preparing spawn area: 76%
-[22:50:16] [Worker-Main-8/INFO] (Minecraft) Preparing spawn area: 78%
-[22:50:17] [Worker-Main-1/INFO] (Minecraft) Preparing spawn area: 83%
-[22:50:17] [Worker-Main-2/INFO] (Minecraft) Preparing spawn area: 85%
-[22:50:18] [Worker-Main-10/INFO] (Minecraft) Preparing spawn area: 87%
-[22:50:18] [Worker-Main-1/INFO] (Minecraft) Preparing spawn area: 88%
-[22:50:19] [Worker-Main-1/INFO] (Minecraft) Preparing spawn area: 92%
-[22:50:23] [Worker-Main-2/INFO] (Minecraft) Preparing spawn area: 94%
-[22:50:23] [Worker-Main-4/INFO] (Minecraft) Preparing spawn area: 94%
-[22:50:23] [Worker-Main-9/INFO] (Minecraft) Preparing spawn area: 94%
-[22:50:23] [Worker-Main-4/INFO] (Minecraft) Preparing spawn area: 94%
-[22:50:23] [Worker-Main-2/INFO] (Minecraft) Preparing spawn area: 94%
-[22:50:23] [Worker-Main-6/INFO] (Minecraft) Preparing spawn area: 94%
-[22:50:23] [Worker-Main-6/INFO] (Minecraft) Preparing spawn area: 94%
-[22:50:23] [Worker-Main-2/INFO] (Minecraft) Preparing spawn area: 96%
-[22:50:23] [Worker-Main-3/INFO] (Minecraft) Preparing spawn area: 99%
-[22:50:23] [Server thread/INFO] (Minecraft) Time elapsed: 28019 ms
-[22:50:23] [Server thread/INFO] (Minecraft) Done (35.279s)! For help, type "help"
-[22:53:53] [Server thread/INFO] (Minecraft) 1222[/127.0.0.1:54812] logged in with entity id 422 at (8.5, 107.0, 7.5)
-[22:53:53] [Server thread/INFO] (Minecraft) 1222 joined the game
-[22:54:17] [Server thread/INFO] (Minecraft) Made 1222 a server operator
-[22:54:24] [Server thread/INFO] (Minecraft) Border set to 10 blocks.
-[22:54:43] [Server thread/INFO] (Minecraft) [1222: Set own game mode to Creative Mode]
-[22:55:15] [Server thread/INFO] (Minecraft) 1222 lost connection: Disconnected
-[22:55:15] [Server thread/INFO] (Minecraft) 1222 left the game
+[23:08:11] [main/INFO] (FabricLoader/Mixin) SpongePowered MIXIN Subsystem Version=0.8.7 Source=file:/C:/Users/macro/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.15.0+mixin.0.8.7/2ce1c5d57a061f3e259ec30b8b0cb2dc889c5156/sponge-mixin-0.15.0+mixin.0.8.7.jar Service=Knot/Fabric Env=SERVER
+[23:08:11] [main/INFO] (FabricLoader/Mixin) Loaded Fabric development mappings for mixin remapper!
+[23:08:11] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_16
+[23:08:11] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_17
+[23:08:13] [main/INFO] (FabricLoader/MixinExtras|Service) Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.4.0).
+[23:08:25] [main/INFO] (border-mod) Initializing BorderMod
+[23:08:25] [main/INFO] (Minecraft) Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
+[23:08:28] [main/INFO] (Minecraft) Loaded 7 recipes
+[23:08:28] [main/INFO] (Minecraft) Loaded 1271 advancements
+[23:08:29] [main/INFO] (BiomeModificationImpl) Applied 0 biome modifications to 0 of 64 new biomes in 4.078 ms
+[23:08:29] [Server thread/INFO] (Minecraft) Starting minecraft server version 1.20.1
+[23:08:29] [Server thread/INFO] (Minecraft) Loading properties
+[23:08:29] [Server thread/INFO] (Minecraft) Default game type: SURVIVAL
+[23:08:29] [Server thread/INFO] (Minecraft) Generating keypair
+[23:08:29] [Server thread/INFO] (Minecraft) Starting Minecraft server on *:25565
+[23:08:29] [Server thread/INFO] (Minecraft) Using default channel type
+[23:08:30] [Server thread/WARN] (Minecraft) **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+[23:08:30] [Server thread/WARN] (Minecraft) The server will make no attempt to authenticate usernames. Beware.
+[23:08:30] [Server thread/WARN] (Minecraft) While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+[23:08:30] [Server thread/WARN] (Minecraft) To change this, set "online-mode" to "true" in the server.properties file.
+[23:08:30] [Server thread/INFO] (Minecraft) Preparing level "world"
+[23:08:32] [Server thread/INFO] (Minecraft) Preparing start region for dimension minecraft:overworld
+[23:08:35] [Worker-Main-7/INFO] (Minecraft) Preparing spawn area: 0%
+[23:08:35] [Worker-Main-7/INFO] (Minecraft) Preparing spawn area: 0%
+[23:08:35] [Worker-Main-7/INFO] (Minecraft) Preparing spawn area: 0%
+[23:08:35] [Worker-Main-7/INFO] (Minecraft) Preparing spawn area: 0%
+[23:08:35] [Worker-Main-7/INFO] (Minecraft) Preparing spawn area: 0%
+[23:08:35] [Worker-Main-7/INFO] (Minecraft) Preparing spawn area: 0%
+[23:08:35] [Worker-Main-7/INFO] (Minecraft) Preparing spawn area: 0%
+[23:08:35] [Worker-Main-7/INFO] (Minecraft) Preparing spawn area: 4%
+[23:08:36] [Worker-Main-4/INFO] (Minecraft) Preparing spawn area: 28%
+[23:08:36] [Worker-Main-11/INFO] (Minecraft) Preparing spawn area: 44%
+[23:08:37] [Worker-Main-8/INFO] (Minecraft) Preparing spawn area: 62%
+[23:08:37] [Worker-Main-9/INFO] (Minecraft) Preparing spawn area: 82%
+[23:08:38] [Worker-Main-3/INFO] (Minecraft) Preparing spawn area: 87%
+[23:08:38] [Worker-Main-8/INFO] (Minecraft) Preparing spawn area: 88%
+[23:08:41] [Worker-Main-4/INFO] (Minecraft) Preparing spawn area: 91%
+[23:08:41] [Worker-Main-4/INFO] (Minecraft) Preparing spawn area: 91%
+[23:08:41] [Worker-Main-4/INFO] (Minecraft) Preparing spawn area: 91%
+[23:08:41] [Worker-Main-4/INFO] (Minecraft) Preparing spawn area: 91%
+[23:08:41] [Worker-Main-4/INFO] (Minecraft) Preparing spawn area: 91%
+[23:08:41] [Worker-Main-6/INFO] (Minecraft) Preparing spawn area: 93%
+[23:08:41] [Server thread/INFO] (Minecraft) Time elapsed: 9825 ms
+[23:08:41] [Server thread/INFO] (Minecraft) Done (11.532s)! For help, type "help"
+[23:08:42] [Server thread/INFO] (Minecraft) 1222[/127.0.0.1:51461] logged in with entity id 229 at (0.5944853935918569, 108.0, -0.06215550762050378)
+[23:08:42] [Server thread/INFO] (Minecraft) 1222 joined the game
+[23:08:46] [Server thread/WARN] (Minecraft) UUID of added entity already exists: RabbitEntity['Rabbit'/239, l='ServerLevel[world]', x=-67.51, y=112.32, z=-176.04]
+[23:08:46] [Server thread/WARN] (Minecraft) UUID of added entity already exists: ChickenEntity['Chicken'/242, l='ServerLevel[world]', x=-173.64, y=96.25, z=-176.00]
+[23:08:46] [Server thread/WARN] (Minecraft) UUID of added entity already exists: ChickenEntity['Chicken'/243, l='ServerLevel[world]', x=-172.25, y=97.00, z=-176.05]
+[23:08:46] [Server thread/WARN] (Minecraft) UUID of added entity already exists: ChickenEntity['Chicken'/244, l='ServerLevel[world]', x=-171.69, y=97.00, z=-176.02]
+[23:09:03] [Server thread/INFO] (Minecraft) 1222 lost connection: Disconnected
+[23:09:03] [Server thread/INFO] (Minecraft) 1222 left the game
