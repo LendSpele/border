@@ -40,7 +40,7 @@ public class StateSaverAndLoader extends PersistentState {
 
     public void setDistance(int distance) {
         this.distance = distance;
-        this.markDirty();  // Mark the state as dirty to ensure it gets saved
+        this.markDirty();
     }
 
     public int getDistance() {
