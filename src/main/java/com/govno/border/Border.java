@@ -1,24 +1,18 @@
 package com.govno.border;
 
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.minecraft.datafixer.fix.BlockEntityKeepPackedFix;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,12 +23,9 @@ public class Border implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("border-mod");
     private int darkness;
     private int freezing;
-
-
     private final Random random = new Random();
 
-
-    @Override
+        @Override
     public void onInitialize() {
         LOGGER.info("Initializing BorderMod");
 
@@ -71,9 +62,6 @@ public class Border implements ModInitializer {
             for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
                 checkPlayerPosition(player, distance);
             }
-
-
-
         });
     }
 
@@ -103,15 +91,8 @@ public class Border implements ModInitializer {
             if (this.freezing >= 200){
                 if (random.nextBoolean()){
                     FreezingEffect.applyUpdateEffect(player, 200);
-
                 }
             }
-
-
         }
     }
-
-
-
-
 }
