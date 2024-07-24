@@ -5,7 +5,8 @@
   "name": "border",
   "description": "",
   "authors": [
-    "L"
+    "L",
+    "Ilya Datsiuk"
   ],
   "contact": {
     "website": "https://www.storylegends.xyz",
@@ -22,7 +23,7 @@
     "border.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.16.0",
+    "fabricloader": "*",
     "fabric": "*",
     "minecraft": "1.20.1"
   }
