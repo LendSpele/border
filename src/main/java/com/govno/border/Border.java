@@ -4,9 +4,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.NetherPortalBlock;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -17,17 +15,13 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Random;
 
-import static net.minecraft.world.dimension.DimensionTypes.THE_NETHER;
 
 public class Border implements ModInitializer {
     public static final String MOD_ID = "border";
@@ -53,7 +47,7 @@ public class Border implements ModInitializer {
                                     PacketByteBuf data = PacketByteBufs.create();
                                     data.writeInt(serverState.getDistance());
                                     context.getSource().sendFeedback(() -> Text.literal("Border set to " + distance + " blocks."), false);
-                                    LOGGER.info("Border set to: " + distance + " blocks.");
+                                    LOGGER.info("Border set to: {} blocks.", distance);
                                     return 1;
                                 })
                         )
@@ -82,13 +76,23 @@ public class Border implements ModInitializer {
         BlockPos pos = player.getBlockPos();
         int x = pos.getX();
         int z = pos.getZ();
-        if (Math.abs(x) > distance || Math.abs(z) > distance) {
-            applyEffects(player, pos, distance);
-            ServerWorld world = player.getServerWorld();
-            if (world.getRegistryKey() == World.NETHER) {
+        ServerWorld world = player.getServerWorld();
+
+        if (world.getRegistryKey() == World.OVERWORLD) {
+            if (Math.abs(x) > distance || Math.abs(z) > distance) {
+                applyEffects(player, pos, distance);
+            }
+        } else if (world.getRegistryKey() == World.NETHER) {
+            if (Math.abs(x) > distance/8 || Math.abs(z) > distance/8) {
+                applyEffects(player, pos, distance);
                 breakNearbyPortalBlocks(player);
             }
         }
+
+
+
+
+
     }
 
     private void applyEffects(ServerPlayerEntity player, BlockPos _playerBlockPos, int _distance) {
@@ -123,13 +127,14 @@ public class Border implements ModInitializer {
             if (playerPos.isWithinDistance(nearestPortalPos, 1.5)) {
                 player.addStatusEffect(new StatusEffectInstance(StatusEffects.DARKNESS, 200, 3, false, false));
                 for (int x = -1; x <= 1; x++) {
-                    for (int y = -1; y <= 1; y++) {
+                    for (int y = -1; y <= 2; y++) {
                         for (int z = -1; z <= 1; z++) {
                             BlockPos offsetPos = nearestPortalPos.add(x, y, z);
-                            if (world.getBlockState(offsetPos).getBlock() instanceof NetherPortalBlock) {
+                            if (world.getBlockState(offsetPos).getBlock() instanceof NetherPortalBlock || world.getBlockState(offsetPos).getBlock() == Blocks.OBSIDIAN) {
                                 world.setBlockState(offsetPos, Blocks.AIR.getDefaultState());
-                                player.addStatusEffect(new StatusEffectInstance(StatusEffects.DARKNESS, 200, 3, false, false));
-
+                                if (random.nextBoolean()){
+                                    world.setBlockState(offsetPos, Blocks.CRYING_OBSIDIAN.getDefaultState());
+                                }
                                 LOGGER.info("Portal block at {} broken", offsetPos.toShortString());
                             }
                         }
@@ -141,7 +146,7 @@ public class Border implements ModInitializer {
 
     private BlockPos findNearestPortalBlock(ServerWorld world, BlockPos playerPos) {
         BlockPos nearestPortalPos = null;
-        double nearestDistance = Double.MAX_VALUE;
+        double nearestDistance = ((double) this.distance /8);
 
         // Поиск ближайшего блока портала
         for (int x = -10; x <= 10; x++) {

@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/IdeaProjects.border.main.iml" filepath="$PROJECT_DIR$/.idea/modules/IdeaProjects.border.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/IdeaProjects.border.test.iml" filepath="$PROJECT_DIR$/.idea/modules/IdeaProjects.border.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/border.main.iml" filepath="$PROJECT_DIR$/.idea/modules/border.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/border.test.iml" filepath="$PROJECT_DIR$/.idea/modules/border.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.example.border.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.example.border.main.iml" />
