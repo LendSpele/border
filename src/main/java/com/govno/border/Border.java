@@ -111,14 +111,19 @@ public class Border implements ModInitializer {
 
         if (
                 (_playerBlockPos.getZ() >= _distance + 20) ||
-                        (_playerBlockPos.getX() >= _distance + 20)
+                (_playerBlockPos.getX() >= _distance + 20) ||
+                (_playerBlockPos.getZ() <= _distance + 20) ||
+                (_playerBlockPos.getX() <= _distance + 20)
+
         ){
             if (player.getWorld().getRegistryKey() == World.OVERWORLD) {
                 if (this.freezing == 200){
                     if (random.nextBoolean()){
-                        FreezingEffect.applyUpdateEffect(player, 10);
+                        FreezingEffect.applyUpdateEffect(player, 200);
                     }
                 }
+            } else {
+                FreezingEffect.deleteFreezingEffect(player);
             }
         }
 
@@ -149,9 +154,7 @@ public class Border implements ModInitializer {
                                 if (random.nextBoolean()){
                                     world.setBlockState(offsetPos, Blocks.CRYING_OBSIDIAN.getDefaultState());
                                 }
-                                for (int i = 0; i < 3; i++) {
-                                    LOGGER.info("BORDER: Portal block at {} broken", offsetPos.toShortString());
-                                }
+                                LOGGER.info("BORDER: Portal block at {} broken", offsetPos.toShortString());
                             }
                         }
                     }
@@ -170,7 +173,6 @@ public class Border implements ModInitializer {
                     BlockPos pos = playerPos.add(x, y, z);
                     if (
                             world.getBlockState(pos).getBlock() instanceof NetherPortalBlock
-
                     ) {
                         double distance = playerPos.getSquaredDistance(pos);
                         if (distance < nearestDistance) {

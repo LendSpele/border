@@ -15,6 +15,11 @@ public class FreezingEffect {
         }
     }
 
+    public static void deleteFreezingEffect(ServerPlayerEntity entity){
+        entity.setFrozenTicks(0);
+    }
+
+
     private static void tickFrozenHands(ServerPlayerEntity player) {
         boolean mainhand = !player.getMainHandStack().isEmpty();
         boolean offhand = !player.getOffHandStack().isEmpty();
