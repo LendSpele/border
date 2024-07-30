@@ -1,6 +1,6 @@
-[15:57:21] [main/INFO] (FabricLoader/GameProvider) Loading Minecraft 1.20.1 with Fabric Loader 0.16.0
-[15:57:21] [main/INFO] (FabricLoader) Loading 46 mods:
-	- border 0.1.1
+[09:50:21] [main/INFO] (FabricLoader/GameProvider) Loading Minecraft 1.20.1 with Fabric Loader 0.16.0
+[09:50:21] [main/INFO] (FabricLoader) Loading 46 mods:
+	- border 0.1.2
 	- fabric-api 0.92.2+1.20.1
 	- fabric-api-base 0.4.31+1802ada577
 	- fabric-api-lookup-api-v1 1.6.36+1802ada577
@@ -46,52 +46,52 @@
 	- java 17
 	- minecraft 1.20.1
 	- mixinextras 0.4.0
-[15:57:21] [main/INFO] (FabricLoader/Mixin) SpongePowered MIXIN Subsystem Version=0.8.7 Source=file:/home/illia/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.15.0+mixin.0.8.7/2ce1c5d57a061f3e259ec30b8b0cb2dc889c5156/sponge-mixin-0.15.0+mixin.0.8.7.jar Service=Knot/Fabric Env=SERVER
-[15:57:22] [main/INFO] (FabricLoader/Mixin) Loaded Fabric development mappings for mixin remapper!
-[15:57:22] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_16
-[15:57:22] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_17
-[15:57:23] [main/INFO] (FabricLoader/MixinExtras|Service) Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.4.0).
-[15:57:32] [main/INFO] (border-mod) Initializing BorderMod
-[15:57:32] [main/INFO] (Minecraft) Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
-[15:57:35] [main/INFO] (Minecraft) Loaded 7 recipes
-[15:57:35] [main/INFO] (Minecraft) Loaded 1271 advancements
-[15:57:36] [main/INFO] (BiomeModificationImpl) Applied 0 biome modifications to 0 of 64 new biomes in 2.254 ms
-[15:57:36] [Server thread/INFO] (Minecraft) Starting minecraft server version 1.20.1
-[15:57:36] [Server thread/INFO] (Minecraft) Loading properties
-[15:57:36] [Server thread/INFO] (Minecraft) Default game type: SURVIVAL
-[15:57:36] [Server thread/INFO] (Minecraft) Generating keypair
-[15:57:36] [Server thread/INFO] (Minecraft) Starting Minecraft server on *:25565
-[15:57:36] [Server thread/INFO] (Minecraft) Using epoll channel type
-[15:57:36] [Server thread/WARN] (Minecraft) **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
-[15:57:36] [Server thread/WARN] (Minecraft) The server will make no attempt to authenticate usernames. Beware.
-[15:57:36] [Server thread/WARN] (Minecraft) While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
-[15:57:36] [Server thread/WARN] (Minecraft) To change this, set "online-mode" to "true" in the server.properties file.
-[15:57:36] [Server thread/INFO] (Minecraft) Preparing level "world"
-[15:57:39] [Server thread/INFO] (Minecraft) Preparing start region for dimension minecraft:overworld
-[15:57:43] [Worker-Main-2/INFO] (Minecraft) Preparing spawn area: 0%
-[15:57:43] [Worker-Main-1/INFO] (Minecraft) Preparing spawn area: 0%
-[15:57:43] [Worker-Main-1/INFO] (Minecraft) Preparing spawn area: 0%
-[15:57:43] [Worker-Main-1/INFO] (Minecraft) Preparing spawn area: 0%
-[15:57:43] [Worker-Main-1/INFO] (Minecraft) Preparing spawn area: 0%
-[15:57:43] [Worker-Main-1/INFO] (Minecraft) Preparing spawn area: 0%
-[15:57:43] [Worker-Main-1/INFO] (Minecraft) Preparing spawn area: 0%
-[15:57:43] [Worker-Main-1/INFO] (Minecraft) Preparing spawn area: 0%
-[15:57:43] [Worker-Main-1/INFO] (Minecraft) Preparing spawn area: 0%
-[15:57:43] [Worker-Main-3/INFO] (Minecraft) Preparing spawn area: 0%
-[15:57:44] [Worker-Main-1/INFO] (Minecraft) Preparing spawn area: 27%
-[15:57:45] [Server thread/INFO] (Minecraft) Time elapsed: 6037 ms
-[15:57:45] [Server thread/INFO] (Minecraft) Done (8.778s)! For help, type "help"
-[15:57:46] [Server thread/INFO] (Minecraft) cg_mga[/127.0.0.1:53754] logged in with entity id 139 at (41.92132740538935, 60.0, -10.921690602819607)
-[15:57:46] [Server thread/INFO] (Minecraft) cg_mga joined the game
-[15:57:48] [Server thread/WARN] (Minecraft) Can't keep up! Is the server overloaded? Running 2646ms or 52 ticks behind
-[15:58:01] [Server thread/INFO] (border-mod) Portal block at 44, 59, -12 broken
-[15:58:01] [Server thread/INFO] (border-mod) Portal block at 44, 59, -11 broken
-[15:58:01] [Server thread/INFO] (border-mod) Portal block at 44, 59, -10 broken
-[15:58:01] [Server thread/INFO] (border-mod) Portal block at 45, 59, -12 broken
-[15:58:01] [Server thread/INFO] (border-mod) Portal block at 45, 59, -11 broken
-[15:58:01] [Server thread/INFO] (border-mod) Portal block at 45, 59, -10 broken
-[15:58:01] [Server thread/INFO] (border-mod) Portal block at 45, 60, -10 broken
-[15:58:01] [Server thread/INFO] (border-mod) Portal block at 45, 61, -10 broken
-[15:58:01] [Server thread/INFO] (border-mod) Portal block at 45, 62, -10 broken
-[15:58:24] [Server thread/INFO] (Minecraft) cg_mga lost connection: Disconnected
-[15:58:24] [Server thread/INFO] (Minecraft) cg_mga left the game
+[09:50:21] [main/INFO] (FabricLoader/Mixin) SpongePowered MIXIN Subsystem Version=0.8.7 Source=file:/home/illia/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.15.0+mixin.0.8.7/2ce1c5d57a061f3e259ec30b8b0cb2dc889c5156/sponge-mixin-0.15.0+mixin.0.8.7.jar Service=Knot/Fabric Env=SERVER
+[09:50:22] [main/INFO] (FabricLoader/Mixin) Loaded Fabric development mappings for mixin remapper!
+[09:50:22] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_16
+[09:50:22] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_17
+[09:50:23] [main/INFO] (FabricLoader/MixinExtras|Service) Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.4.0).
+[09:50:32] [main/INFO] (border-mod) BORDER: Initializing BorderMod
+[09:50:32] [main/INFO] (Minecraft) Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
+[09:50:34] [main/INFO] (Minecraft) Loaded 7 recipes
+[09:50:35] [main/INFO] (Minecraft) Loaded 1271 advancements
+[09:50:35] [main/INFO] (BiomeModificationImpl) Applied 0 biome modifications to 0 of 64 new biomes in 2.873 ms
+[09:50:35] [Server thread/INFO] (Minecraft) Starting minecraft server version 1.20.1
+[09:50:35] [Server thread/INFO] (Minecraft) Loading properties
+[09:50:35] [Server thread/INFO] (Minecraft) Default game type: SURVIVAL
+[09:50:35] [Server thread/INFO] (Minecraft) Generating keypair
+[09:50:36] [Server thread/INFO] (Minecraft) Starting Minecraft server on *:25565
+[09:50:36] [Server thread/INFO] (Minecraft) Using epoll channel type
+[09:50:36] [Server thread/WARN] (Minecraft) **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+[09:50:36] [Server thread/WARN] (Minecraft) The server will make no attempt to authenticate usernames. Beware.
+[09:50:36] [Server thread/WARN] (Minecraft) While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+[09:50:36] [Server thread/WARN] (Minecraft) To change this, set "online-mode" to "true" in the server.properties file.
+[09:50:36] [Server thread/INFO] (Minecraft) Preparing level "world"
+[09:50:39] [Server thread/INFO] (Minecraft) Preparing start region for dimension minecraft:overworld
+[09:50:43] [Worker-Main-3/INFO] (Minecraft) Preparing spawn area: 0%
+[09:50:44] [Worker-Main-1/INFO] (Minecraft) Preparing spawn area: 0%
+[09:50:44] [Worker-Main-2/INFO] (Minecraft) Preparing spawn area: 0%
+[09:50:44] [Worker-Main-2/INFO] (Minecraft) Preparing spawn area: 0%
+[09:50:44] [Worker-Main-2/INFO] (Minecraft) Preparing spawn area: 0%
+[09:50:44] [Worker-Main-2/INFO] (Minecraft) Preparing spawn area: 0%
+[09:50:44] [Worker-Main-1/INFO] (Minecraft) Preparing spawn area: 0%
+[09:50:44] [Worker-Main-1/INFO] (Minecraft) Preparing spawn area: 0%
+[09:50:44] [Worker-Main-1/INFO] (Minecraft) Preparing spawn area: 0%
+[09:50:44] [Worker-Main-1/INFO] (Minecraft) Preparing spawn area: 0%
+[09:50:44] [Worker-Main-1/INFO] (Minecraft) Preparing spawn area: 1%
+[09:50:44] [Worker-Main-1/INFO] (Minecraft) Preparing spawn area: 63%
+[09:50:45] [Server thread/INFO] (Minecraft) Time elapsed: 6144 ms
+[09:50:45] [Server thread/INFO] (Minecraft) Done (9.302s)! For help, type "help"
+[09:50:45] [Server thread/INFO] (Minecraft) cg_mga[/127.0.0.1:34706] logged in with entity id 66 at (-145.32394841320902, 78.61524482588172, -377.79413497562354)
+[09:50:45] [Server thread/INFO] (Minecraft) cg_mga joined the game
+[09:52:23] [Server thread/INFO] (border-mod) BORDER: Portal block at -29, 47, -35 broken
+[09:52:23] [Server thread/INFO] (border-mod) BORDER: Portal block at -29, 51, -35 broken
+[09:52:23] [Server thread/INFO] (border-mod) BORDER: Portal block at -28, 47, -35 broken
+[09:52:23] [Server thread/INFO] (border-mod) BORDER: Portal block at -28, 51, -35 broken
+[09:52:23] [Server thread/INFO] (border-mod) BORDER: Portal block at -27, 47, -35 broken
+[09:52:23] [Server thread/INFO] (border-mod) BORDER: Portal block at -27, 48, -35 broken
+[09:52:23] [Server thread/INFO] (border-mod) BORDER: Portal block at -27, 49, -35 broken
+[09:52:23] [Server thread/INFO] (border-mod) BORDER: Portal block at -27, 50, -35 broken
+[09:52:23] [Server thread/INFO] (border-mod) BORDER: Portal block at -27, 51, -35 broken
+[09:52:42] [Server thread/INFO] (Minecraft) cg_mga lost connection: Disconnected
+[09:52:42] [Server thread/INFO] (Minecraft) cg_mga left the game
