@@ -33,6 +33,7 @@ public class Border implements ModInitializer {
     private final Random random = new Random();
     private int distance;
 
+
     @Override
     public void onInitialize() {
         LOGGER.info("BORDER: Initializing BorderMod");
@@ -76,6 +77,7 @@ public class Border implements ModInitializer {
         });
     }
 
+
     public void checkPlayerPosition(ServerPlayerEntity player, int distance) {
         BlockPos pos = player.getBlockPos();
         int x = pos.getX();
@@ -94,12 +96,14 @@ public class Border implements ModInitializer {
         }
     }
 
+
     private void applyEffects(ServerPlayerEntity player, BlockPos _playerBlockPos, int _distance) {
         player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 200, 2, false, false));
         player.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 200, 5, false, false));
         player.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, 200, 5, false, false));
 
-        if(this.darkness == 200){
+        if(this.darkness == 199){
+            player.setFireTicks(140);
             if(random.nextBoolean()){
                 player.addStatusEffect(new StatusEffectInstance(StatusEffects.DARKNESS, 200, 3, false, false));
             }
@@ -133,6 +137,8 @@ public class Border implements ModInitializer {
             }
         }
     }
+
+
     private void breakNearbyPortalBlocks(ServerPlayerEntity player) {
         ServerWorld world = player.getServerWorld();
         BlockPos playerPos = player.getBlockPos();
@@ -158,6 +164,7 @@ public class Border implements ModInitializer {
             }
         }
     }
+
 
     private BlockPos findNearestPortalBlock(ServerWorld world, BlockPos playerPos) {
         BlockPos nearestPortalPos = null;
