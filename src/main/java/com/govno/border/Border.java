@@ -4,14 +4,14 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.NetherPortalBlock;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.vehicle.BoatEntity;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -24,134 +24,116 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Random;
 
-
 public class Border implements ModInitializer {
     public static final String MOD_ID = "border";
     public static final Logger LOGGER = LoggerFactory.getLogger("border-mod");
-    private int darkness;
-    private int freezing;
+
+    private int tickCounter = 0; // для периодических эффектов
     private final Random random = new Random();
-    private int distance;
+
+    private final BorderConfig borderConfig = new BorderConfig();
 
     @Override
     public void onInitialize() {
         LOGGER.info("BORDER: Initializing BorderMod");
 
+        // Команда /setborder
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
                 dispatcher.register(CommandManager.literal("setborder")
                         .requires(source -> source.hasPermissionLevel(2))
                         .then(CommandManager.argument("distance", IntegerArgumentType.integer())
                                 .executes(context -> {
                                     int distance = IntegerArgumentType.getInteger(context, "distance");
-                                    MinecraftServer server = context.getSource().getServer();
-                                    StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(server);
-                                    serverState.setDistance(distance);
-                                    PacketByteBuf data = PacketByteBufs.create();
-                                    data.writeInt(serverState.getDistance());
-                                    context.getSource().sendFeedback(() -> Text.literal("Border set to " + distance + " blocks."), false);
-                                    for (int i = 0; i < 3; i++) {
-                                        LOGGER.info("BORDER: Border set to: {} blocks.", distance);
-                                    }
+                                    borderConfig.setDistance(distance);
+                                    context.getSource().sendFeedback(
+                                            () -> Text.literal("Border set to " + distance + " blocks."), false
+                                    );
+                                    LOGGER.info("BORDER: Border set to: {} blocks.", distance);
                                     return 1;
                                 })
                         )
                 )
         );
 
-        ServerTickEvents.END_SERVER_TICK.register(server -> {
-            this.darkness++;
-            if(this.darkness >= 200){
-                this.darkness = 0;
-            }
-            this.freezing++;
-            if(this.freezing >= 400){
-                this.freezing = 0;
-            }
-            StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(server);
-            int distance = serverState.getDistance();
-            this.distance = distance;
-            for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
-                checkPlayerPosition(player, distance);
-            }
-        });
+        // Тик сервера
+        ServerTickEvents.END_SERVER_TICK.register(this::onServerTick);
     }
 
-    public void checkPlayerPosition(ServerPlayerEntity player, int distance) {
+    private void onServerTick(MinecraftServer server) {
+        tickCounter++;
+
+        for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
+            checkPlayerPosition(player);
+        }
+    }
+
+    private void checkPlayerPosition(ServerPlayerEntity player) {
+        ServerWorld world = player.getWorld();
         BlockPos pos = player.getBlockPos();
         int x = pos.getX();
         int z = pos.getZ();
-        ServerWorld world = player.getServerWorld();
+        int distance = borderConfig.getDistance();
+        int playerDistance = Math.max(Math.abs(x), Math.abs(z));
 
-        if (world.getRegistryKey() == World.OVERWORLD) {
-            if (Math.abs(x) > distance || Math.abs(z) > distance) {
-                applyEffects(player, pos, distance);
-            }
-        } else if (world.getRegistryKey() == World.NETHER) {
-            if (Math.abs(x) > distance/8 || Math.abs(z) > distance/8) {
-                applyEffects(player, pos, distance);
-                breakNearbyPortalBlocks(player);
-            }
+        // 1. За границей бордера > тьма
+        if (playerDistance > distance) {
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.DARKNESS, 220, 0, false, false));
         }
-    }
 
-    private void applyEffects(ServerPlayerEntity player, BlockPos _playerBlockPos, int _distance) {
-        player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 200, 2, false, false));
-        player.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 200, 5, false, false));
-        player.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, 200, 5, false, false));
+        // 2. +50 блоков > слабость, замедление, урон каждые 2 секунды
+        if (playerDistance > distance + 50) {
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 220, 1, false, false));
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 220, 1, false, false));
 
-        if(this.darkness == 200){
-            if(random.nextBoolean()){
-                player.addStatusEffect(new StatusEffectInstance(StatusEffects.DARKNESS, 200, 3, false, false));
+            if (tickCounter % 40 == 0) { // каждые 2 секунды
+                player.damage(player.getWorld(), player.getDamageSources().magic(), 8.0f);
+                spawnFireParticles(world, pos, 10);
             }
         }
 
-        if (
-                (_playerBlockPos.getZ() >= _distance + 20) ||
-                (_playerBlockPos.getX() >= _distance + 20) ||
-                (_playerBlockPos.getZ() <= _distance + 20) ||
-                (_playerBlockPos.getX() <= _distance + 20)
-
-        ){
-            if (player.getWorld().getRegistryKey() == World.OVERWORLD) {
-                if (this.freezing == 200){
-                    if (random.nextBoolean()){
-                        FreezingEffect.applyUpdateEffect(player, 200);
-                    }
-                }
-            } else {
-                FreezingEffect.deleteFreezingEffect(player);
+        // 3. +100 блоков > бесконечная тьма и убийство каждые 4 секунды
+        if (playerDistance > distance + 100) {
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.DARKNESS, 999999, 0, false, false));
+            if (tickCounter % 80 == 0) { // каждые 4 секунды
+                player.damage(player.getWorld(), player.getDamageSources().magic(), Float.MAX_VALUE);
+                spawnFireParticles(world, pos, 20);
+                spawnAshParticles(world, pos, 70);
             }
         }
 
-        if (player.hasVehicle()){
+        // 4. Поломка портала в аду
+        if (world.getRegistryKey() == World.NETHER && playerDistance > distance / 8) {
+            breakNearbyPortalBlocks(player);
+        }
+
+        // 5. Если игрок на лодке > вытаскиваем его
+        if (player.hasVehicle() && player.getControllingVehicle() instanceof BoatEntity) {
             Entity vehicle = player.getControllingVehicle();
-            assert vehicle != null;
-
-            if(vehicle instanceof BoatEntity) {
-                vehicle.updatePosition(_playerBlockPos.getX(), _playerBlockPos.getY() - 1, _playerBlockPos.getZ());
-                player.dismountVehicle();
-            }
+            vehicle.updatePosition(pos.getX(), pos.getY() - 1, pos.getZ());
+            player.dismountVehicle();
         }
     }
+
     private void breakNearbyPortalBlocks(ServerPlayerEntity player) {
-        ServerWorld world = player.getServerWorld();
+        ServerWorld world = player.getWorld();
         BlockPos playerPos = player.getBlockPos();
         BlockPos nearestPortalPos = findNearestPortalBlock(world, playerPos);
 
-        if (nearestPortalPos != null) {
-            if (playerPos.isWithinDistance(nearestPortalPos, 2.5)) {
-                player.addStatusEffect(new StatusEffectInstance(StatusEffects.DARKNESS, 200, 3, false, false));
-                for (int x = -1; x <= 3; x++) {
-                    for (int y = -1; y <= 3; y++) {
-                        for (int z = -1; z <= 3; z++) {
-                            BlockPos offsetPos = nearestPortalPos.add(x, y, z);
-                            if (world.getBlockState(offsetPos).getBlock() instanceof NetherPortalBlock || world.getBlockState(offsetPos).getBlock() == Blocks.OBSIDIAN) {
-                                world.setBlockState(offsetPos, Blocks.AIR.getDefaultState());
-                                if (random.nextBoolean()){
-                                    world.setBlockState(offsetPos, Blocks.CRYING_OBSIDIAN.getDefaultState());
-                                }
-                                LOGGER.info("BORDER: Portal block at {} broken", offsetPos.toShortString());
+        if (nearestPortalPos != null && playerPos.isWithinDistance(nearestPortalPos, 2.5)) {
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.DARKNESS, 200, 3, false, false));
+
+            for (int x = -1; x <= 3; x++) {
+                for (int y = -1; y <= 3; y++) {
+                    for (int z = -1; z <= 3; z++) {
+                        BlockPos offsetPos = nearestPortalPos.add(x, y, z);
+                        if (world.getBlockState(offsetPos).getBlock() instanceof NetherPortalBlock ||
+                                world.getBlockState(offsetPos).getBlock() == Blocks.OBSIDIAN) {
+                            world.setBlockState(offsetPos, Blocks.AIR.getDefaultState());
+                            if (random.nextBoolean()) {
+                                world.setBlockState(offsetPos, Blocks.CRYING_OBSIDIAN.getDefaultState());
                             }
+                            spawnFireParticles(world, offsetPos, 15); // частицы огня при поломке портала
+                            LOGGER.info("BORDER: Portal block at {} broken", offsetPos.toShortString());
                         }
                     }
                 }
@@ -161,15 +143,13 @@ public class Border implements ModInitializer {
 
     private BlockPos findNearestPortalBlock(ServerWorld world, BlockPos playerPos) {
         BlockPos nearestPortalPos = null;
-        double nearestDistance = ((double) this.distance /8);
+        double nearestDistance = (double) borderConfig.getDistance() / 8;
 
         for (int x = -10; x <= 10; x++) {
             for (int y = -11; y <= 10; y++) {
                 for (int z = -10; z <= 10; z++) {
                     BlockPos pos = playerPos.add(x, y, z);
-                    if (
-                            world.getBlockState(pos).getBlock() instanceof NetherPortalBlock
-                    ) {
+                    if (world.getBlockState(pos).getBlock() instanceof NetherPortalBlock) {
                         double distance = playerPos.getSquaredDistance(pos);
                         if (distance < nearestDistance) {
                             nearestDistance = distance;
@@ -180,5 +160,38 @@ public class Border implements ModInitializer {
             }
         }
         return nearestPortalPos;
+    }
+
+    private void spawnFireParticles(ServerWorld world, BlockPos pos, int count) {
+        for (int i = 0; i < count; i++) {
+            double offsetX = random.nextDouble() - 0.5;
+            double offsetY = random.nextDouble();
+            double offsetZ = random.nextDouble() - 0.5;
+            world.spawnParticles(
+                    ParticleTypes.SOUL_FIRE_FLAME,
+                    pos.getX() + 0.5 + offsetX,
+                    pos.getY() + 1.0 + offsetY,
+                    pos.getZ() + 0.5 + offsetZ,
+                    2,
+                    1, 1, 1, 0.01
+            );
+
+        }
+    }
+    private void spawnAshParticles(ServerWorld world, BlockPos pos, int count) {
+        for (int i = 0; i < count; i++) {
+            double offsetX = random.nextDouble() - 0.5;
+            double offsetY = random.nextDouble();
+            double offsetZ = random.nextDouble() - 0.5;
+            world.spawnParticles(
+                    ParticleTypes.ASH,
+                    pos.getX() + 0.5 + offsetX,
+                    pos.getY() + 1.0 + offsetY,
+                    pos.getZ() + 0.5 + offsetZ,
+                    3,
+                    3, 3, 3, 0.1
+            );
+
+        }
     }
 }
