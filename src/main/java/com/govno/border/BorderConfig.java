@@ -2,6 +2,7 @@ package com.govno.border;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.File;
 import java.io.FileReader;
@@ -9,50 +10,48 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class BorderConfig {
+
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final File CONFIG_FILE = new File("config/border.json");
+    private static final String FILE_NAME = "border.json";
 
-    private int distance = 5000; // дефолтное значение
+    private static final File CONFIG_FILE = FabricLoader.getInstance().getConfigDir().resolve(FILE_NAME).toFile();
 
-    public BorderConfig() {
-        load();
-    }
+    // ====== поля, которые сериализуются ======
+    private int distance = 5000; // дефолтная граница
 
+    // ====== геттеры/сеттеры ======
     public int getDistance() {
         return distance;
     }
 
     public void setDistance(int distance) {
         this.distance = distance;
-        save();
     }
 
-    private void load() {
-        if (!CONFIG_FILE.exists()) {
-            save(); // если файла нет → создать дефолт
-            return;
-        }
-
-        try (FileReader reader = new FileReader(CONFIG_FILE)) {
-            BorderConfig loaded = GSON.fromJson(reader, BorderConfig.class);
-            if (loaded != null) {
-                this.distance = loaded.distance;
+    // ====== загрузка ======
+    public static BorderConfig load() {
+        if (CONFIG_FILE.exists()) {
+            try (FileReader reader = new FileReader(CONFIG_FILE)) {
+                BorderConfig loaded = GSON.fromJson(reader, BorderConfig.class);
+                if (loaded != null) {
+                    return loaded;
+                }
+            } catch (IOException e) {
+                System.err.println("[BorderConfig] Ошибка чтения: " + e.getMessage());
             }
-        } catch (Exception e) {
-            System.err.println("[BorderConfig] Ошибка загрузки конфига, использую дефолт: " + e.getMessage());
-            this.distance = 5000; // fallback
-            save(); // пересоздать файл
         }
+        // если ошибка → создаём новый конфиг по дефолту
+        BorderConfig def = new BorderConfig();
+        def.save();
+        return def;
     }
 
-    private void save() {
-        try {
-            CONFIG_FILE.getParentFile().mkdirs();
-            try (FileWriter writer = new FileWriter(CONFIG_FILE)) {
-                GSON.toJson(this, writer);
-            }
+    // ====== сохранение ======
+    public void save() {
+        try (FileWriter writer = new FileWriter(CONFIG_FILE)) {
+            GSON.toJson(this, writer);
         } catch (IOException e) {
-            System.err.println("[BorderConfig] Ошибка сохранения: " + e.getMessage());
+            System.err.println("[BorderConfig] Ошибка записи: " + e.getMessage());
         }
     }
 }

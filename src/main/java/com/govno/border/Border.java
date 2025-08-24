@@ -31,7 +31,7 @@ public class Border implements ModInitializer {
     private int tickCounter = 0; // для периодических эффектов
     private final Random random = new Random();
 
-    private final BorderConfig borderConfig = new BorderConfig();
+    private final BorderConfig borderConfig = BorderConfig.load();
 
     @Override
     public void onInitialize() {
