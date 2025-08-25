@@ -1,5 +1,5 @@
 {
-  "message_id": "border.death",
+  "message_id": "border_death",
   "exhaustion": 20,
   "scaling": "never",
   "effects": "hurt",

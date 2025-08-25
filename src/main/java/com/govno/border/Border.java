@@ -7,7 +7,6 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.NetherPortalBlock;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.vehicle.BoatEntity;
@@ -16,6 +15,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -28,40 +29,52 @@ public class Border implements ModInitializer {
     public static final String MOD_ID = "border";
     public static final Logger LOGGER = LoggerFactory.getLogger("border-mod");
 
-    private int tickCounter = 0; // для периодических эффектов
+    private int tickCounter = 0;
     private final Random random = new Random();
-
     private final BorderConfig borderConfig = BorderConfig.load();
 
     @Override
     public void onInitialize() {
         LOGGER.info("BORDER: Initializing BorderMod");
 
-        // Команда /setborder
+        // Команда /setborder <+x> <-x> <+z> <-z>
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
                 dispatcher.register(CommandManager.literal("setborder")
                         .requires(source -> source.hasPermissionLevel(2))
-                        .then(CommandManager.argument("distance", IntegerArgumentType.integer())
-                                .executes(context -> {
-                                    int distance = IntegerArgumentType.getInteger(context, "distance");
-                                    borderConfig.setDistance(distance);
-                                    context.getSource().sendFeedback(
-                                            () -> Text.literal("Border set to " + distance + " blocks."), false
-                                    );
-                                    LOGGER.info("BORDER: Border set to: {} blocks.", distance);
-                                    return 1;
-                                })
+                        .then(CommandManager.argument("posX", IntegerArgumentType.integer())
+                                .then(CommandManager.argument("negX", IntegerArgumentType.integer())
+                                        .then(CommandManager.argument("posZ", IntegerArgumentType.integer())
+                                                .then(CommandManager.argument("negZ", IntegerArgumentType.integer())
+                                                        .executes(context -> {
+                                                            int posX = IntegerArgumentType.getInteger(context, "posX");
+                                                            int negX = IntegerArgumentType.getInteger(context, "negX");
+                                                            int posZ = IntegerArgumentType.getInteger(context, "posZ");
+                                                            int negZ = IntegerArgumentType.getInteger(context, "negZ");
+
+                                                            borderConfig.setPosX(posX);
+                                                            borderConfig.setNegX(negX);
+                                                            borderConfig.setPosZ(posZ);
+                                                            borderConfig.setNegZ(negZ);
+
+                                                            context.getSource().sendFeedback(
+                                                                    () -> Text.literal("Border set: +X=" + posX + ", -X=" + negX +
+                                                                            ", +Z=" + posZ + ", -Z=" + negZ), false
+                                                            );
+                                                            LOGGER.info("BORDER: Border updated: +X={}, -X={}, +Z={}, -Z={}", posX, negX, posZ, negZ);
+                                                            return 1;
+                                                        })
+                                                )
+                                        )
+                                )
                         )
                 )
         );
 
-        // Тик сервера
         ServerTickEvents.END_SERVER_TICK.register(this::onServerTick);
     }
 
     private void onServerTick(MinecraftServer server) {
         tickCounter++;
-
         for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
             checkPlayerPosition(player);
         }
@@ -72,42 +85,74 @@ public class Border implements ModInitializer {
         BlockPos pos = player.getBlockPos();
         int x = pos.getX();
         int z = pos.getZ();
-        int distance = borderConfig.getDistance();
-        int playerDistance = Math.max(Math.abs(x), Math.abs(z));
 
-        // 1. За границей бордера > тьма
-        if (playerDistance > distance) {
+        int px = borderConfig.getPosX();
+        int nx = borderConfig.getNegX();
+        int pz = borderConfig.getPosZ();
+        int nz = borderConfig.getNegZ();
+
+        boolean outside = x > px || x < nx || z > pz || z < nz;
+        boolean outside50 = x > px + 50 || x < nx - 50 || z > pz + 50 || z < nz - 50;
+        boolean outside100 = x > px + 100 || x < nx - 100 || z > pz + 100 || z < nz - 100;
+
+        // 1. За границей > тьма
+        if (outside) {
             player.addStatusEffect(new StatusEffectInstance(StatusEffects.DARKNESS, 220, 0, false, false));
         }
 
-        // 2. +50 блоков > слабость, замедление, урон каждые 2 секунды
-        if (playerDistance > distance + 50) {
+        // 2. +50 > слабость, замедление, урон
+        if (outside50) {
             player.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 220, 1, false, false));
             player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 220, 1, false, false));
 
-            if (tickCounter % 40 == 0) { // каждые 2 секунды
-                player.damage(player.getWorld(), player.getDamageSources().magic(), 8.0f);
+            if (tickCounter % 40 == 0) {
+                if (player.getWorld() instanceof ServerWorld serverWorld) {
+                    player.damage(serverWorld, BorderDamageSource.create(serverWorld), 8.0f);
+                }
                 spawnFireParticles(world, pos, 10);
             }
         }
 
-        // 3. +100 блоков > бесконечная тьма и убийство каждые 4 секунды
-        if (playerDistance > distance + 100) {
+        // 3. +100 > вечная тьма + убийство
+        if (outside100) {
             player.addStatusEffect(new StatusEffectInstance(StatusEffects.DARKNESS, 999999, 0, false, false));
-            if (tickCounter % 80 == 0) { // каждые 4 секунды
-                player.damage(player.getWorld(), player.getDamageSources().magic(), Float.MAX_VALUE);
+            if (tickCounter % 80 == 0) {
+                if (player.getWorld() instanceof ServerWorld serverWorld) {
+                    player.damage(serverWorld, BorderDamageSource.create(serverWorld), Float.MAX_VALUE);
+                    serverWorld.playSound(
+                            null,
+                            player.getX(),
+                            player.getY(),
+                            player.getZ(),
+                            SoundEvents.ENTITY_WARDEN_AGITATED,
+                            player.getSoundCategory(),
+                            1.0f,
+                            0.6f
+                    );
+
+                    serverWorld.playSound(
+                            null,
+                            player.getX(),
+                            player.getY(),
+                            player.getZ(),
+                            SoundEvents.AMBIENT_CAVE.value(),
+                            player.getSoundCategory(),
+                            1.0f,
+                            0.5f
+                    );
+                }
                 spawnFireParticles(world, pos, 20);
                 spawnAshParticles(world, pos, 70);
             }
         }
 
-        // 4. Поломка портала в аду
-        if (world.getRegistryKey() == World.NETHER && playerDistance > distance / 8) {
+        // 4. Ломаем порталы в аду
+        if (world.getRegistryKey() == World.NETHER && outside) {
             breakNearbyPortalBlocks(player);
         }
 
-        // 5. Если игрок на лодке > вытаскиваем его
-        if (player.hasVehicle() && player.getControllingVehicle() instanceof BoatEntity) {
+        // 5. Выкидываем игрока из лодки
+        if (player.hasVehicle() && outside50 && player.getControllingVehicle() instanceof BoatEntity) {
             Entity vehicle = player.getControllingVehicle();
             vehicle.updatePosition(pos.getX(), pos.getY() - 1, pos.getZ());
             player.dismountVehicle();
@@ -132,7 +177,7 @@ public class Border implements ModInitializer {
                             if (random.nextBoolean()) {
                                 world.setBlockState(offsetPos, Blocks.CRYING_OBSIDIAN.getDefaultState());
                             }
-                            spawnFireParticles(world, offsetPos, 15); // частицы огня при поломке портала
+                            spawnFireParticles(world, offsetPos, 15);
                             LOGGER.info("BORDER: Portal block at {} broken", offsetPos.toShortString());
                         }
                     }
@@ -143,7 +188,7 @@ public class Border implements ModInitializer {
 
     private BlockPos findNearestPortalBlock(ServerWorld world, BlockPos playerPos) {
         BlockPos nearestPortalPos = null;
-        double nearestDistance = (double) borderConfig.getDistance() / 8;
+        double nearestDistance = 16; // радиус поиска
 
         for (int x = -10; x <= 10; x++) {
             for (int y = -11; y <= 10; y++) {
@@ -175,9 +220,9 @@ public class Border implements ModInitializer {
                     2,
                     1, 1, 1, 0.01
             );
-
         }
     }
+
     private void spawnAshParticles(ServerWorld world, BlockPos pos, int count) {
         for (int i = 0; i < count; i++) {
             double offsetX = random.nextDouble() - 0.5;
@@ -191,7 +236,6 @@ public class Border implements ModInitializer {
                     3,
                     3, 3, 3, 0.1
             );
-
         }
     }
 }

@@ -2,7 +2,6 @@ package com.govno.border;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.File;
 import java.io.FileReader;
@@ -10,48 +9,73 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class BorderConfig {
-
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final String FILE_NAME = "border.json";
+    private static final File CONFIG_FILE = new File("config/border_config.json");
 
-    private static final File CONFIG_FILE = FabricLoader.getInstance().getConfigDir().resolve(FILE_NAME).toFile();
+    private int posX = 1900;
+    private int negX = -2000;
+    private int posZ = 2130;
+    private int negZ = -2200;
 
-    // ====== поля, которые сериализуются ======
-    private int distance = 5000; // дефолтная граница
-
-    // ====== геттеры/сеттеры ======
-    public int getDistance() {
-        return distance;
+    public int getPosX() {
+        return posX;
     }
 
-    public void setDistance(int distance) {
-        this.distance = distance;
+    public int getNegX() {
+        return negX;
     }
 
-    // ====== загрузка ======
+    public int getPosZ() {
+        return posZ;
+    }
+
+    public int getNegZ() {
+        return negZ;
+    }
+
+    public void setPosX(int posX) {
+        this.posX = posX;
+        save();
+    }
+
+    public void setNegX(int negX) {
+        this.negX = negX;
+        save();
+    }
+
+    public void setPosZ(int posZ) {
+        this.posZ = posZ;
+        save();
+    }
+
+    public void setNegZ(int negZ) {
+        this.negZ = negZ;
+        save();
+    }
+
+    public void save() {
+        try {
+            if (!CONFIG_FILE.getParentFile().exists()) {
+                CONFIG_FILE.getParentFile().mkdirs();
+            }
+            try (FileWriter writer = new FileWriter(CONFIG_FILE)) {
+                GSON.toJson(this, writer);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static BorderConfig load() {
         if (CONFIG_FILE.exists()) {
             try (FileReader reader = new FileReader(CONFIG_FILE)) {
-                BorderConfig loaded = GSON.fromJson(reader, BorderConfig.class);
-                if (loaded != null) {
-                    return loaded;
-                }
+                return GSON.fromJson(reader, BorderConfig.class);
             } catch (IOException e) {
-                System.err.println("[BorderConfig] Ошибка чтения: " + e.getMessage());
+                e.printStackTrace();
             }
         }
-        // если ошибка → создаём новый конфиг по дефолту
-        BorderConfig def = new BorderConfig();
-        def.save();
-        return def;
-    }
-
-    // ====== сохранение ======
-    public void save() {
-        try (FileWriter writer = new FileWriter(CONFIG_FILE)) {
-            GSON.toJson(this, writer);
-        } catch (IOException e) {
-            System.err.println("[BorderConfig] Ошибка записи: " + e.getMessage());
-        }
+        BorderConfig config = new BorderConfig();
+        config.save();
+        return config;
     }
 }
