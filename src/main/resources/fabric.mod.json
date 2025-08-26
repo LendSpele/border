@@ -6,13 +6,13 @@
   "description": "",
   "authors": [
     "LendSpele",
-    "Ilya Datsiuk"
+    "datapeice(Illia Datsiuk)"
   ],
   "contact": {
     "website": "https://www.storylegends.xyz",
-    "repo": "https://github.com/LendSpele"
+    "repo": "https://github.com/LendSpele/border"
   },
-  "license": "All-Rights-Reserved",
+  "license": "MIT",
   "environment": "server",
   "entrypoints": {
     "main": [
