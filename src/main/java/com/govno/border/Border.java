@@ -1,6 +1,5 @@
 package com.govno.border;
 
-import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -22,6 +21,7 @@ import net.minecraft.world.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Random;
 
 public class Border implements ModInitializer {
@@ -30,41 +30,21 @@ public class Border implements ModInitializer {
 
     private int tickCounter = 0;
     private final Random random = new Random();
-    private final BorderConfig borderConfig = BorderConfig.load();
 
     @Override
     public void onInitialize() {
         LOGGER.info("BORDER: Initializing BorderMod");
 
-        // Команда /setborder <+x> <-x> <+z> <-z>
+        // Команда /border reload
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
-                dispatcher.register(CommandManager.literal("setborder")
+                dispatcher.register(CommandManager.literal("border")
                         .requires(source -> source.hasPermissionLevel(2))
-                        .then(CommandManager.argument("posX", IntegerArgumentType.integer())
-                                .then(CommandManager.argument("negX", IntegerArgumentType.integer())
-                                        .then(CommandManager.argument("posZ", IntegerArgumentType.integer())
-                                                .then(CommandManager.argument("negZ", IntegerArgumentType.integer())
-                                                        .executes(context -> {
-                                                            int posX = IntegerArgumentType.getInteger(context, "posX");
-                                                            int negX = IntegerArgumentType.getInteger(context, "negX");
-                                                            int posZ = IntegerArgumentType.getInteger(context, "posZ");
-                                                            int negZ = IntegerArgumentType.getInteger(context, "negZ");
-
-                                                            borderConfig.setPosX(posX);
-                                                            borderConfig.setNegX(negX);
-                                                            borderConfig.setPosZ(posZ);
-                                                            borderConfig.setNegZ(negZ);
-
-                                                            context.getSource().sendFeedback(
-                                                                    () -> Text.literal("Border set: +X=" + posX + ", -X=" + negX +
-                                                                            ", +Z=" + posZ + ", -Z=" + negZ), false
-                                                            );
-                                                            LOGGER.info("BORDER: Border updated: +X={}, -X={}, +Z={}, -Z={}", posX, negX, posZ, negZ);
-                                                            return 1;
-                                                        })
-                                                )
-                                        )
-                                )
+                        .then(CommandManager.literal("reload")
+                                .executes(context -> {
+                                    BorderConfig.reload();
+                                    context.getSource().sendFeedback(() -> Text.literal("§aBorder config reloaded!"), false);
+                                    return 1;
+                                })
                         )
                 )
         );
@@ -85,14 +65,9 @@ public class Border implements ModInitializer {
         int x = pos.getX();
         int z = pos.getZ();
 
-        int px = borderConfig.getPosX();
-        int nx = borderConfig.getNegX();
-        int pz = borderConfig.getPosZ();
-        int nz = borderConfig.getNegZ();
-
-        boolean outside = x > px || x < nx || z > pz || z < nz;
-        boolean outside50 = x > px + 50 || x < nx - 50 || z > pz + 50 || z < nz - 50;
-        boolean outside100 = x > px + 100 || x < nx - 100 || z > pz + 100 || z < nz - 100;
+        boolean outside = isOutsidePolygon(x, z, BorderConfig.get().getPolygon());
+        boolean outside50 = isOutsidePolygon(x, z, expandPolygon(BorderConfig.get().getPolygon(), 50));
+        boolean outside100 = isOutsidePolygon(x, z, expandPolygon(BorderConfig.get().getPolygon(), 100));
 
         // 1. За границей > тьма
         if (outside) {
@@ -105,41 +80,39 @@ public class Border implements ModInitializer {
             player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 220, 1, false, false));
 
             if (tickCounter % 40 == 0) {
-                if (player.getWorld() instanceof ServerWorld serverWorld) {
-                    player.damage(serverWorld, BorderDamageSource.create(serverWorld), 8.0f);
-                }
+                player.damage(world, BorderDamageSource.create(world), 8.0f);
                 spawnFireParticles(world, pos, 10);
             }
         }
 
-        // 3. +100 > вечная тьма + убийство
+        // 3. +100 > вечная тьма + убийство + звуки
         if (outside100) {
             player.addStatusEffect(new StatusEffectInstance(StatusEffects.DARKNESS, 999999, 0, false, false));
             if (tickCounter % 80 == 0) {
-                if (player.getWorld() instanceof ServerWorld serverWorld) {
-                    player.damage(serverWorld, BorderDamageSource.create(serverWorld), Float.MAX_VALUE);
-                    serverWorld.playSound(
-                            null,
-                            player.getX(),
-                            player.getY(),
-                            player.getZ(),
-                            SoundEvents.ENTITY_WARDEN_AGITATED,
-                            player.getSoundCategory(),
-                            1.0f,
-                            0.6f
-                    );
+                player.damage(world, BorderDamageSource.create(world), Float.MAX_VALUE);
 
-                    serverWorld.playSound(
-                            null,
-                            player.getX(),
-                            player.getY(),
-                            player.getZ(),
-                            SoundEvents.AMBIENT_CAVE.value(),
-                            player.getSoundCategory(),
-                            1.0f,
-                            0.5f
-                    );
-                }
+                world.playSound(
+                        null, // null = звук слышат все игроки в мире
+                        player.getX(),
+                        player.getY(),
+                        player.getZ(),
+                        SoundEvents.ENTITY_WARDEN_AGITATED, // звук
+                        player.getSoundCategory(),          // категория
+                        1.0f,                               // громкость
+                        0.6f                                // pitch
+                );
+
+                world.playSound(
+                        null,
+                        player.getX(),
+                        player.getY(),
+                        player.getZ(),
+                        SoundEvents.AMBIENT_CAVE,
+                        player.getSoundCategory(),
+                        1.0f,
+                        0.5f
+                );
+
                 spawnFireParticles(world, pos, 20);
                 spawnAshParticles(world, pos, 70);
             }
@@ -151,11 +124,33 @@ public class Border implements ModInitializer {
         }
 
         // 5. Выкидываем игрока из лодки
-        if (player.hasVehicle() && outside50 && player.getControllingVehicle() instanceof BoatEntity) {
-            Entity vehicle = player.getControllingVehicle();
+        if (player.hasVehicle() && outside50 && player.getControllingVehicle() instanceof BoatEntity vehicle) {
             vehicle.updatePosition(pos.getX(), pos.getY() - 1, pos.getZ());
             player.dismountVehicle();
         }
+    }
+
+    // Проверка точки в многоугольнике
+    private boolean isOutsidePolygon(int x, int z, List<int[]> polygon) {
+        boolean inside = false;
+
+        for (int i = 0, j = polygon.size() - 1; i < polygon.size(); j = i++) {
+            int xi = polygon.get(i)[0], zi = polygon.get(i)[1];
+            int xj = polygon.get(j)[0], zj = polygon.get(j)[1];
+
+            boolean intersect = ((zi > z) != (zj > z)) &&
+                    (x < (xj - xi) * (z - zi) / (double) (zj - zi) + xi);
+            if (intersect) inside = !inside;
+        }
+
+        return !inside; // если не внутри → значит снаружи
+    }
+
+    // смещение каждой точки наружу
+    private List<int[]> expandPolygon(List<int[]> polygon, int dist) {
+        return polygon.stream()
+                .map(p -> new int[]{p[0] + (p[0] >= 0 ? dist : -dist), p[1] + (p[1] >= 0 ? dist : -dist)})
+                .toList();
     }
 
     private void breakNearbyPortalBlocks(ServerPlayerEntity player) {

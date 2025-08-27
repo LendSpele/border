@@ -33,7 +33,7 @@ public class BorderConfig {
     public static BorderConfig load() {
         try {
             if (!CONFIG_FILE.exists()) {
-                LOGGER.warn("Config not found, creating default...");
+                LOGGER.warn("\n \n Config not found, creating default...\n \n ");
                 BorderConfig config = new BorderConfig();
                 config.polygon.add(new int[]{1900, -1900});
                 config.polygon.add(new int[]{-2000, 2000});
@@ -47,11 +47,11 @@ public class BorderConfig {
             try (FileReader reader = new FileReader(CONFIG_FILE)) {
                 Type type = new TypeToken<BorderConfig>() {}.getType();
                 INSTANCE = GSON.fromJson(reader, type);
-                LOGGER.info("Border config loaded with {} points", INSTANCE.polygon.size());
+                LOGGER.info("\n \n Border config loaded with {} points", INSTANCE.polygon.size());
                 return INSTANCE;
             }
         } catch (Exception e) {
-            LOGGER.error("Failed to load border config", e);
+            LOGGER.error("\n \n Failed to load border config", e);
             BorderConfig fallback = new BorderConfig();
             fallback.polygon.add(new int[]{0, 0});
             return fallback;
